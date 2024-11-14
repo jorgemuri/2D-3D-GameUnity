@@ -1,0 +1,16 @@
+# Ignorar carpetas generadas por Unity en el proyecto dentro de 'murillojGame'
+murillojGame/Library/
+murillojGame/Temp/
+murillojGame/Obj/
+murillojGame/Build/
+murillojGame/Builds/
+murillojGame/Logs/
+murillojGame/UserSettings/
+
+# Ignorar archivos específicos de Unity
+murillojGame/*.csproj
+murillojGame/*.sln
+murillojGame/*.unityproj
+murillojGame/*.pidb
+murillojGame/*.tmp
+murillojGame/*.log
