@@ -88,6 +88,11 @@ public class PlayerController : MonoBehaviour
         {
             _isGrounded = true;
         }
+
+        if (collision.gameObject.CompareTag("topeCaida"))
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionExit(Collision collision)
