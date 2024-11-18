@@ -13,13 +13,16 @@ public class PlayerController : MonoBehaviour
     private bool _facingRight = true; // Variable para saber si está mirando a la derecha
     private bool _isRunning = false;
 
+    private float speed;
     public float velocidad = 5.0f;
+    public float velocidadCorriendo = 10.0f;
     public float fuerzaSalto = 10.0f;
     public float velocidadGiro = 10.0f; // Velocidad de rotación para que sea suave
 
     // Start is called before the first frame update
     void Start()
     {
+        speed = velocidad;
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
     }
@@ -46,13 +49,13 @@ public class PlayerController : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.LeftControl) && _isGrounded) //Si está en el suelo y corriendo
             {
-                velocidad = velocidad * 2;
+                speed = velocidadCorriendo;
                 _animator.SetFloat("runningSpeed",2f);
                 _isRunning = true;
             }
             if (Input.GetKeyUp(KeyCode.LeftControl) && _isRunning) //Si he levantado el control después de correr
             {
-                velocidad = velocidad / 2;
+                speed = velocidad;
                 _animator.SetFloat("runningSpeed",1f);
                 _isRunning = false;
             }
@@ -64,7 +67,7 @@ public class PlayerController : MonoBehaviour
         //Compruebo si está corriendo
        
         // Mover al personaje en el eje X (izquierda o derecha)
-        transform.Translate(transform.forward * (_z * velocidad * Time.deltaTime));
+        transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
         
         // Salto
         if (_isGrounded && Input.GetButtonDown("Jump"))
@@ -88,8 +91,7 @@ public class PlayerController : MonoBehaviour
         {
             _isGrounded = true;
         }
-
-        if (collision.gameObject.CompareTag("topeCaida"))
+        else if (collision.gameObject.CompareTag("topeCaida"))
         {
             Destroy(gameObject);
         }
@@ -101,5 +103,10 @@ public class PlayerController : MonoBehaviour
         {
             _isGrounded = false;
         }
+    }
+
+    private void aumentarContadorBananas()
+    {
+        
     }
 }
