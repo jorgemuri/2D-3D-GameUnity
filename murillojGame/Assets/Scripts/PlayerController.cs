@@ -12,19 +12,28 @@ public class PlayerController : MonoBehaviour
     private Animator _animator;
     private bool _facingRight = true; // Variable para saber si está mirando a la derecha
     private bool _isRunning = false;
+    private bool _superSalto = true;
+    
+    private Animator _animatorWings;
+    private Transform _transformWings;
 
     private float speed;
     public float velocidad = 5.0f;
     public float velocidadCorriendo = 10.0f;
     public float fuerzaSalto = 10.0f;
     public float velocidadGiro = 10.0f; // Velocidad de rotación para que sea suave
-
+    public GameObject wings;
+    
     // Start is called before the first frame update
     void Start()
     {
         speed = velocidad;
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
+        
+        _animatorWings = wings.GetComponent<Animator>();
+        _transformWings = wings.GetComponent<Transform>();
+        _transformWings.localScale = Vector3.zero;
     }
 
     // Update is called once per frame
@@ -47,13 +56,13 @@ public class PlayerController : MonoBehaviour
         {
             _animator.SetBool("isMoving", true);
             
-            if (Input.GetKeyDown(KeyCode.LeftControl) && _isGrounded) //Si está en el suelo y corriendo
+            if (Input.GetKeyDown(KeyCode.LeftShift) && _isGrounded) //Si está en el suelo y corriendo
             {
                 speed = velocidadCorriendo;
                 _animator.SetFloat("runningSpeed",2f);
                 _isRunning = true;
             }
-            if (Input.GetKeyUp(KeyCode.LeftControl) && _isRunning) //Si he levantado el control después de correr
+            if (Input.GetKeyUp(KeyCode.LeftShift) && _isRunning) //Si he levantado el control después de correr
             {
                 speed = velocidad;
                 _animator.SetFloat("runningSpeed",1f);
@@ -70,10 +79,26 @@ public class PlayerController : MonoBehaviour
         transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
         
         // Salto
-        if (_isGrounded && Input.GetButtonDown("Jump"))
+        if (Input.GetButtonDown("Jump"))
         {
-            _rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
-            _animator.SetTrigger("jump");
+            //salto normal
+            if (_isGrounded)
+            {
+                _rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
+                _animator.SetTrigger("jump");
+            }
+            else if (_superSalto) //salto con las alas
+            {
+                _rb.AddForce(Vector3.up * (fuerzaSalto + 2.0f), ForceMode.Impulse);
+                _transformWings.localScale = new Vector3(0.5f,0.5f,0.5f);
+                _animatorWings.SetBool("aletear",true);
+                _superSalto = false;
+            }
+        }
+
+        if (transform.position.y < -10)
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -90,10 +115,12 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             _isGrounded = true;
-        }
-        else if (collision.gameObject.CompareTag("topeCaida"))
-        {
-            Destroy(gameObject);
+            if (_animatorWings.GetBool("aletear"))
+            {
+                _animatorWings.SetBool("aletear",false);
+                _transformWings.localScale = Vector3.zero;
+                _superSalto = true;
+            }
         }
     }
 
