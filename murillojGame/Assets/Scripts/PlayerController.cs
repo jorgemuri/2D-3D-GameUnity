@@ -122,6 +122,11 @@ public class PlayerController : MonoBehaviour
                 _superSalto = true;
             }
         }
+
+        if (collision.gameObject.CompareTag("end"))
+        {
+            //Hacer que sale
+        }
     }
 
     private void OnCollisionExit(Collision collision)
