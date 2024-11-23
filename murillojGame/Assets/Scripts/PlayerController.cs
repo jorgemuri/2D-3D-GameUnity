@@ -16,13 +16,17 @@ public class PlayerController : MonoBehaviour
     
     private Animator _animatorWings;
     private Transform _transformWings;
-
+    private AudioSource _audioSource;
+    
     private float speed;
+    
+    
     public float velocidad = 5.0f;
     public float velocidadCorriendo = 10.0f;
     public float fuerzaSalto = 10.0f;
     public float velocidadGiro = 10.0f; // Velocidad de rotación para que sea suave
     public GameObject wings;
+    public AudioClip[] Clips;
     
     // Start is called before the first frame update
     void Start()
@@ -30,6 +34,7 @@ public class PlayerController : MonoBehaviour
         speed = velocidad;
         _rb = GetComponent<Rigidbody>();
         _animator = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
         
         _animatorWings = wings.GetComponent<Animator>();
         _transformWings = wings.GetComponent<Transform>();
@@ -86,6 +91,8 @@ public class PlayerController : MonoBehaviour
             {
                 _rb.AddForce(Vector3.up * fuerzaSalto, ForceMode.Impulse);
                 _animator.SetTrigger("jump");
+                
+                PlaySound(0,0.1f); //Salto
             }
             else if (_superSalto) //salto con las alas
             {
@@ -93,12 +100,13 @@ public class PlayerController : MonoBehaviour
                 _transformWings.localScale = new Vector3(0.5f,0.5f,0.5f);
                 _animatorWings.SetBool("aletear",true);
                 _superSalto = false;
+                PlaySound(1,1f); //Aleteo
             }
         }
 
         if (transform.position.y < -10)
         {
-            Destroy(gameObject);
+            matarPersonaje();
         }
     }
 
@@ -123,10 +131,43 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        if (collision.gameObject.CompareTag("Ghost"))
+        {
+            BoxCollider box = collision.collider as BoxCollider;
+            if (box != null)
+            {
+                // Obtener la posición del contacto
+                foreach (ContactPoint contact in collision.contacts)
+                {
+                    // Obtener las coordenadas superiores del BoxCollider
+                    Vector3 boxTopCenter = box.bounds.center + new Vector3(0, box.bounds.extents.y, 0);
+
+                    // Verificar si el contacto está cerca de la parte superior
+                    if (Mathf.Abs(contact.point.y - boxTopCenter.y) < 0.1f)
+                    {
+                        Destroy(collision.gameObject);
+                        PlaySound(2,0.5f);
+                    }
+                    else
+                    {
+                       matarPersonaje();
+                    }
+                }
+            }
+        }
+
+        if (collision.gameObject.CompareTag("banana"))
+        {
+            PlaySound(3,0.5f);
+            CameraController.aumentarContador();
+            Destroy(collision.gameObject);
+        }
+        
         if (collision.gameObject.CompareTag("end"))
         {
             //Hacer que sale
         }
+        
     }
 
     private void OnCollisionExit(Collision collision)
@@ -137,8 +178,20 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void aumentarContadorBananas()
+    private void matarPersonaje()
     {
-        
+        CameraController.setPersonajeMuerto();
+        Destroy(gameObject);
+    }
+    
+    private void PlaySound(int soundIndex, float volume)
+    {
+        if (_audioSource != null && Clips != null && soundIndex >= 0 && soundIndex < Clips.Length)
+        {
+            // Asegurarse de que el volumen esté dentro del rango válido
+            volume = Mathf.Clamp(volume, 0f, 1f);
+            
+            _audioSource.PlayOneShot(Clips[soundIndex],volume);
+        }
     }
 }
