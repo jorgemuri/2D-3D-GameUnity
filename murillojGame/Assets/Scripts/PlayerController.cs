@@ -145,8 +145,8 @@ public class PlayerController : MonoBehaviour
                     // Verificar si el contacto está cerca de la parte superior
                     if (Mathf.Abs(contact.point.y - boxTopCenter.y) < 0.1f)
                     {
-                        Destroy(collision.gameObject);
                         PlaySound(2,0.5f);
+                        enemigoDead(collision.gameObject);
                     }
                     else
                     {
@@ -190,8 +190,21 @@ public class PlayerController : MonoBehaviour
         {
             // Asegurarse de que el volumen esté dentro del rango válido
             volume = Mathf.Clamp(volume, 0f, 1f);
+            if (gameObject)
+            {
+                _audioSource.PlayOneShot(Clips[soundIndex],volume);
+            }
             
-            _audioSource.PlayOneShot(Clips[soundIndex],volume);
         }
+    }
+
+    private void enemigoDead(GameObject enemigo)
+    {
+        enemigo.transform.rotation = Quaternion.Euler(0,90,0);
+        Animator animatorEnemy = enemigo.GetComponent<Animator>();
+        animatorEnemy.SetTrigger("death");
+        // Destruir el objeto después de la duración de la animación
+        float deathAnimationLength = animatorEnemy.GetCurrentAnimatorStateInfo(0).length;
+        Destroy(enemigo, deathAnimationLength);
     }
 }
