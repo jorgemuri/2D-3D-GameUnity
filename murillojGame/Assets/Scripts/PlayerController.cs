@@ -145,7 +145,8 @@ public class PlayerController : MonoBehaviour
                     // Verificar si el contacto está cerca de la parte superior
                     if (Mathf.Abs(contact.point.y - boxTopCenter.y) < 0.1f)
                     {
-                        PlaySound(2,0.5f);
+                        PlaySound(2, 0.5f);
+                        _rb.AddForce(Vector3.up * fuerzaSalto * 0.5f, ForceMode.Impulse);
                         enemigoDead(collision.gameObject);
                     }
                     else
@@ -161,6 +162,11 @@ public class PlayerController : MonoBehaviour
             PlaySound(3,0.5f);
             CameraController.aumentarContador();
             Destroy(collision.gameObject);
+        }
+
+        if (collision.gameObject.CompareTag("champinion"))
+        {
+            _rb.AddForce(Vector3.up * fuerzaSalto * 2.0f, ForceMode.Impulse);
         }
         
         if (collision.gameObject.CompareTag("end"))
