@@ -11,6 +11,7 @@ TagManager:
   - Ghost
   - champinion
   - tope
+  - headEnemy
   layers:
   - Default
   - TransparentFX

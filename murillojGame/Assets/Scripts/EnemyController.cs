@@ -5,37 +5,35 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     public float speed = 5.0f;
-    public float distanceMax = 3.0f;
     
     private Animator _animator;
     private bool _movingRight = true;
-
-    private Vector3 _posicionincial;
-
-    private float _tiempoFueraRango;
+    public GameObject cabeza;
+    private float posicionInicialy;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _posicionincial = transform.position;
+        posicionInicialy = transform.position.y;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (transform.position.z < _posicionincial.z-distanceMax || transform.position.z > _posicionincial.z+distanceMax)
-        {
-            _tiempoFueraRango = _tiempoFueraRango+Time.deltaTime;
-            if (_tiempoFueraRango > 1.0f)
-            {
-                transform.position = new Vector3(_posicionincial.x, _posicionincial.y, _posicionincial.z);
-                _tiempoFueraRango = 0.0f;
-            }
-            Rotar();
-        }
-        transform.Translate(Vector3.forward * (speed * Time.deltaTime));    
+        transform.Translate(Vector3.forward * (speed * Time.deltaTime));
+        cabeza.transform.position = new Vector3(transform.position.x, posicionInicialy+4.0f, transform.position.z);
+        
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("tope"))
+        {
+            Rotar();
+        }
+    }
     private void Rotar()
     {
         if (_movingRight)

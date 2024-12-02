@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,8 +20,8 @@ public class PlayerController : MonoBehaviour
     private AudioSource _audioSource;
     
     private float speed;
-    
-    
+
+    public GameObject contadorBanana;
     public float velocidad = 5.0f;
     public float velocidadCorriendo = 10.0f;
     public float fuerzaSalto = 10.0f;
@@ -133,34 +134,23 @@ public class PlayerController : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Ghost"))
         {
-            BoxCollider box = collision.collider as BoxCollider;
-            if (box != null)
-            {
-                // Obtener la posición del contacto
-                foreach (ContactPoint contact in collision.contacts)
-                {
-                    // Obtener las coordenadas superiores del BoxCollider
-                    Vector3 boxTopCenter = box.bounds.center + new Vector3(0, box.bounds.extents.y, 0);
-
-                    // Verificar si el contacto está cerca de la parte superior
-                    if (Mathf.Abs(contact.point.y - boxTopCenter.y) < 0.1f)
-                    {
-                        PlaySound(2, 0.5f);
-                        _rb.AddForce(Vector3.up * fuerzaSalto * 0.5f, ForceMode.Impulse);
-                        enemigoDead(collision.gameObject);
-                    }
-                    else
-                    {
-                       matarPersonaje();
-                    }
-                }
-            }
+            matarPersonaje();
+        }
+        if (collision.gameObject.CompareTag("headEnemy"))
+        {
+            PlaySound(2, 0.5f);
+            _rb.AddForce(Vector3.up * fuerzaSalto * 2f, ForceMode.Impulse);
+            Transform padre = collision.transform.parent;
+            Transform fantasma = padre.transform.GetChild(0);
+            enemigoDead(fantasma.gameObject);
         }
 
         if (collision.gameObject.CompareTag("banana"))
         {
             PlaySound(3,0.5f);
-            CameraController.aumentarContador();
+            
+            contadorBanana.GetComponent<ContadorBananas>().aumentarContador();
+            
             Destroy(collision.gameObject);
         }
 
@@ -171,7 +161,7 @@ public class PlayerController : MonoBehaviour
         
         if (collision.gameObject.CompareTag("end"))
         {
-            //Hacer que sale
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
         
     }
@@ -192,7 +182,7 @@ public class PlayerController : MonoBehaviour
     
     private void PlaySound(int soundIndex, float volume)
     {
-        if (_audioSource != null && Clips != null && soundIndex >= 0 && soundIndex < Clips.Length)
+        if (_audioSource && Clips != null && soundIndex >= 0 && soundIndex < Clips.Length)
         {
             // Asegurarse de que el volumen esté dentro del rango válido
             volume = Mathf.Clamp(volume, 0f, 1f);

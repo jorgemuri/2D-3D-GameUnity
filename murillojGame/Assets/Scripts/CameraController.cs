@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
-    private static int contadorBanana = 0;
     private bool _sonado = false;
     
     public int aux = 0;
@@ -18,7 +18,6 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
-        
     }
     
     // Update is called once per frame
@@ -37,20 +36,8 @@ public class CameraController : MonoBehaviour
         else
         {
             transform.position = new Vector3(player.transform.position.x + distanciaPlayer, 2.0f, player.transform.position.z);
-            aux = contadorBanana;
         }
     }
-
-    public static void aumentarContador()
-    {
-        contadorBanana++;
-    }
-
-    public static int getContadorBanana()
-    {
-        return contadorBanana;
-    }
-
     public static void setPersonajeMuerto()
     {
         personajeMuerto = true;
