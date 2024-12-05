@@ -2230,8 +2230,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.7204322, z: 0.2815703}
-  m_Center: {x: 3.696689e-12, y: 0.88975376, z: 0.0016525189}
+  m_Size: {x: 1, y: 1.7204322, z: 0.4479646}
+  m_Center: {x: 0, y: 0.88975376, z: 0.0022233129}
 --- !u!114 &6292279982786347631
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2244,11 +2244,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb6d960cddceeea47accf169eb7f2f41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  contadorBanana: {fileID: 0}
   velocidad: 5
   velocidadCorriendo: 10
   fuerzaSalto: 5
   velocidadGiro: 5
   wings: {fileID: 694856750474019568}
+  Clips: []
 --- !u!1 &5557830670997854451
 GameObject:
   m_ObjectHideFlags: 0

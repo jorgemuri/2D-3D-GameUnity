@@ -192,6 +192,11 @@ public class PlayerController : MonoBehaviour
             comprobarSupersalto();
             _bridge = collision.gameObject;
         }
+
+        if (collision.gameObject.CompareTag("bola"))
+        {
+            _rb.AddForce(new Vector3(1.0f,0.0f,0.0f)* 300.0f, ForceMode.Impulse);
+        }
         
     }
 

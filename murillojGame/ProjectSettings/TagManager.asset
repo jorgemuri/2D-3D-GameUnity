@@ -13,6 +13,7 @@ TagManager:
   - tope
   - headEnemy
   - puente
+  - bola
   layers:
   - Default
   - TransparentFX

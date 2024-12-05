@@ -7,7 +7,7 @@ public class GeneradorBolas : MonoBehaviour
     public GameObject bolaPrefab;
     private float time = 0.0f;
     public float fuerzaBola = 5.0f;
-    List<GameObject> bolas = new List<GameObject>();
+    private GameObject bola;
 
     // Update is called once per frame
     void Update()
@@ -15,9 +15,12 @@ public class GeneradorBolas : MonoBehaviour
         time += Time.deltaTime;
         if (time > 2.0f)
         {
-            GameObject bola = Instantiate(bolaPrefab, transform.position, Quaternion.identity);
+            if (bola) //Borro la anterior
+            {
+                Destroy(bola);
+            }
+            bola = Instantiate(bolaPrefab, transform.position, Quaternion.identity);
             bola.GetComponent<Rigidbody>().AddForce(new Vector3(1.0f,0.0f,0.0f)* fuerzaBola);
-            bolas.Add(bola);
             
             time = 0.0f;
         }
