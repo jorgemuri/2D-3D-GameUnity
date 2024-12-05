@@ -12,6 +12,7 @@ TagManager:
   - champinion
   - tope
   - headEnemy
+  - puente
   layers:
   - Default
   - TransparentFX

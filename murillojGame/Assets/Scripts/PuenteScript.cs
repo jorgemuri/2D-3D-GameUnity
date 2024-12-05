@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PuenteScript : MonoBehaviour
 {
-    private float speed = 2.0f;
+    public float speed = 2.0f;
     
 
     // Update is called once per frame

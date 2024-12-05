@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
     private bool _facingRight = true; // Variable para saber si está mirando a la derecha
     private bool _isRunning = false;
     private bool _superSalto = true;
+    private bool _isOnBridge = false;
+    private float diferencia;
+    private GameObject _bridge;
     
     private Animator _animatorWings;
     private Transform _transformWings;
@@ -79,8 +82,22 @@ public class PlayerController : MonoBehaviour
         {
             _animator.SetBool("isMoving", false);
         }
-        //Compruebo si está corriendo
-       
+
+        
+        //MIRO SI ESTÁ ENCIMA DEL PUENTE
+        if (_isOnBridge && _z == 0)
+        {
+            Vector3 vector3 = transform.position;
+            vector3.z = _bridge.transform.position.z - diferencia;
+            transform.position = vector3;
+        }else if (_isOnBridge && _z != 0)
+        {
+            diferencia = _bridge.transform.position.z - transform.position.z;
+        }
+        
+        
+        
+        
         // Mover al personaje en el eje X (izquierda o derecha)
         transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
         
@@ -124,12 +141,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("Ground"))
         {
             _isGrounded = true;
-            if (_animatorWings.GetBool("aletear"))
-            {
-                _animatorWings.SetBool("aletear",false);
-                _transformWings.localScale = Vector3.zero;
-                _superSalto = true;
-            }
+            comprobarSupersalto();
         }
 
         if (collision.gameObject.CompareTag("Ghost"))
@@ -143,6 +155,10 @@ public class PlayerController : MonoBehaviour
             Transform padre = collision.transform.parent;
             Transform fantasma = padre.transform.GetChild(0);
             enemigoDead(fantasma.gameObject);
+            //pongo la posición del jugador en 0 en el eje x, para que no se vaya saliendo de la linea
+            var vector3 = transform.position;
+            vector3.x = 0;
+            transform.position = vector3;
         }
 
         if (collision.gameObject.CompareTag("banana"))
@@ -163,14 +179,42 @@ public class PlayerController : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
+
+        if (collision.gameObject.CompareTag("puente"))
+        {
+            if (!_isOnBridge) //Si es la primera vez que choca antes de salir del puente
+            {
+                diferencia = collision.transform.position.z - transform.position.z;
+            }
+            _isOnBridge = true;
+            _isGrounded = true;
+           
+            comprobarSupersalto();
+            _bridge = collision.gameObject;
+        }
         
     }
 
+    private void comprobarSupersalto()
+    {
+        if (_animatorWings.GetBool("aletear"))
+        {
+            _animatorWings.SetBool("aletear",false);
+            _transformWings.localScale = Vector3.zero;
+            _superSalto = true;
+        }
+    }
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
             _isGrounded = false;
+        }
+
+        if (collision.gameObject.CompareTag("puente"))
+        {
+            _isGrounded = false;
+            _isOnBridge = false;
         }
     }
 
