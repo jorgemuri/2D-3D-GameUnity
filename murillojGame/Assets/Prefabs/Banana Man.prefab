@@ -2250,7 +2250,12 @@ MonoBehaviour:
   fuerzaSalto: 5
   velocidadGiro: 5
   wings: {fileID: 694856750474019568}
-  Clips: []
+  Clips:
+  - {fileID: 8300000, guid: 71aaac88342a6544c8377b8ef5775602, type: 3}
+  - {fileID: 8300000, guid: 74ea637e08e1e294191bddf581aa229e, type: 3}
+  - {fileID: 8300000, guid: 7dcc3b1d370e89f4ba76e9813bb3014c, type: 3}
+  - {fileID: 8300000, guid: a02957ddf71aa0b49905359aec134b99, type: 3}
+  - {fileID: 8300000, guid: 90448cc204d6b8943bd3262d50c1d8d5, type: 3}
 --- !u!1 &5557830670997854451
 GameObject:
   m_ObjectHideFlags: 0

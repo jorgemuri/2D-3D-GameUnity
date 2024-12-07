@@ -173,6 +173,7 @@ public class PlayerController : MonoBehaviour
         if (collision.gameObject.CompareTag("champinion"))
         {
             _rb.AddForce(Vector3.up * fuerzaSalto * 2.0f, ForceMode.Impulse);
+            PlaySound(4,1.0f);
         }
         
         if (collision.gameObject.CompareTag("end"))
