@@ -8,11 +8,14 @@ public class CameraController : MonoBehaviour
     
     public GameObject player;
     public float distanciaPlayer = 10.0f;
+    public float altura = 2.0f; // Altura de la cámara respecto al jugador
+    public float suavidad = 0.2f; // Cuánto tarda la cámara en llegar al objetivo
     public AudioClip[] Clips;
     public GameObject canva;
     
     private static bool personajeMuerto = false;
     private AudioSource _audioSource;
+    private Vector3 _velocidadSuavizada; // Para SmoothDamp
     
     void Start()
     {
@@ -34,7 +37,15 @@ public class CameraController : MonoBehaviour
         }
         else
         {
-            transform.position = new Vector3(player.transform.position.x + distanciaPlayer, 2.0f, player.transform.position.z);
+            // Posición deseada de la cámara
+            Vector3 posicionObjetivo = new Vector3(
+                player.transform.position.x + distanciaPlayer, 
+                altura, 
+                player.transform.position.z
+            );
+
+            // Movimiento suave usando SmoothDamp
+            transform.position = Vector3.SmoothDamp(transform.position, posicionObjetivo, ref _velocidadSuavizada, suavidad);
         }
     }
     public static void setPersonajeMuerto()

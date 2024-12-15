@@ -6087,6 +6087,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1195666469}
   distanciaPlayer: 10
+  altura: 1
+  suavidad: 0.2
   Clips:
   - {fileID: 8300000, guid: e54d28d7398fc624eb4d7c9d89de2db1, type: 3}
   canva: {fileID: 1195956413}

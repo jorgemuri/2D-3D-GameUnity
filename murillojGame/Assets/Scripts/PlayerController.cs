@@ -62,15 +62,23 @@ public class PlayerController : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.LeftShift) && _isGrounded) //Si está en el suelo y corriendo
             {
-                speed = velocidadCorriendo;
+                if (speed < 0)
+                {
+                    speed = -velocidadCorriendo;
+                }
+                else
+                {
+                    speed = velocidadCorriendo;
+                }
+                
                 _animator.SetFloat("runningSpeed",2f);
                 _isRunning = true;
             }
             if (Input.GetKeyUp(KeyCode.LeftShift) && _isRunning) //Si he levantado el control después de correr
             {
-                if (speed  < 0)
+                if (speed < 0)
                 {
-                    speed = -velocidad;
+                    speed = - velocidad;
                 }
                 else
                 {
