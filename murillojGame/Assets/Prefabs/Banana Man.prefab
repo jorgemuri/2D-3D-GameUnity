@@ -2248,7 +2248,6 @@ MonoBehaviour:
   velocidad: 5
   velocidadCorriendo: 10
   fuerzaSalto: 5
-  velocidadGiro: 5
   wings: {fileID: 694856750474019568}
   Clips:
   - {fileID: 8300000, guid: 71aaac88342a6544c8377b8ef5775602, type: 3}

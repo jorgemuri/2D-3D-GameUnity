@@ -1,7 +1,3 @@
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,9 +8,9 @@ public class PlayerController : MonoBehaviour
     private float _z;
     private Animator _animator;
     private bool _facingRight = true; // Variable para saber si está mirando a la derecha
-    private bool _isRunning = false;
+    private bool _isRunning;
     private bool _superSalto = true;
-    private bool _isOnBridge = false;
+    private bool _isOnBridge;
     private float diferencia;
     private GameObject _bridge;
     
@@ -28,7 +24,6 @@ public class PlayerController : MonoBehaviour
     public float velocidad = 5.0f;
     public float velocidadCorriendo = 10.0f;
     public float fuerzaSalto = 10.0f;
-    public float velocidadGiro = 10.0f; // Velocidad de rotación para que sea suave
     public GameObject wings;
     public AudioClip[] Clips;
     
@@ -73,7 +68,14 @@ public class PlayerController : MonoBehaviour
             }
             if (Input.GetKeyUp(KeyCode.LeftShift) && _isRunning) //Si he levantado el control después de correr
             {
-                speed = velocidad;
+                if (speed  < 0)
+                {
+                    speed = -velocidad;
+                }
+                else
+                {
+                    speed = velocidad;
+                }
                 _animator.SetFloat("runningSpeed",1f);
                 _isRunning = false;
             }
@@ -82,7 +84,6 @@ public class PlayerController : MonoBehaviour
         {
             _animator.SetBool("isMoving", false);
         }
-
         
         //MIRO SI ESTÁ ENCIMA DEL PUENTE
         if (_isOnBridge && _z == 0)
@@ -95,11 +96,15 @@ public class PlayerController : MonoBehaviour
             diferencia = _bridge.transform.position.z - transform.position.z;
         }
         
-        
-        
-        
         // Mover al personaje en el eje X (izquierda o derecha)
-        transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
+        
+            // Calcula la dirección en la que te quieres mover
+            Vector3 moveDirection = transform.forward * (_z * speed * Time.deltaTime);
+    
+            // Mueve el personaje utilizando Rigidbody
+            _rb.MovePosition(_rb.position + moveDirection);
+
+        //transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
         
         // Salto
         if (Input.GetButtonDown("Jump"))
@@ -130,75 +135,73 @@ public class PlayerController : MonoBehaviour
 
     private void Flip()
     {
+        speed = speed * -1;
+        
         // Cambiar la dirección en que está mirando
         _facingRight = !_facingRight;
+        
 
         transform.rotation = Quaternion.Euler(0, _facingRight ? 0 : 180, 0);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        switch (collision.gameObject.tag)
         {
-            _isGrounded = true;
-            comprobarSupersalto();
+            case "Ground":
+                _isGrounded = true;
+                comprobarSupersalto(); 
+                break;
+            case "Ghost":
+                matarPersonaje();
+                break;
+            case "headEnemy":
+                PlaySound(2, 0.5f);
+                _rb.velocity = new Vector3(0.0f,0.0f,0.0f);
+                _rb.AddForce(Vector3.up * fuerzaSalto * 2f, ForceMode.Impulse);
+                Transform padre = collision.transform.parent;
+                Transform fantasma = padre.transform.GetChild(0);
+                enemigoDead(fantasma.gameObject);
+                //pongo la posición del jugador en 0 en el eje x, para que no se vaya saliendo de la linea
+                var vector3 = transform.position;
+                vector3.x = 0;
+                transform.position = vector3;
+                break;
+            case "champinion":
+                _rb.AddForce(Vector3.up * fuerzaSalto * 2.0f, ForceMode.Impulse);
+                PlaySound(4,1.0f);
+                break;
+            case "end":
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+                break;
+            case "puente":
+                if (!_isOnBridge) //Si es la primera vez que choca antes de salir del puente
+                {
+                    diferencia = collision.transform.position.z - transform.position.z;
+                }
+                _isOnBridge = true;
+                _isGrounded = true;
+           
+                comprobarSupersalto();
+                _bridge = collision.gameObject;
+                break;
+            case "bola":
+                _rb.AddForce(new Vector3(1.0f,0.0f,0.0f)* 300.0f, ForceMode.Impulse);
+                break;
+            
         }
+    }
 
-        if (collision.gameObject.CompareTag("Ghost"))
-        {
-            matarPersonaje();
-        }
-        if (collision.gameObject.CompareTag("headEnemy"))
-        {
-            PlaySound(2, 0.5f);
-            _rb.AddForce(Vector3.up * fuerzaSalto * 2f, ForceMode.Impulse);
-            Transform padre = collision.transform.parent;
-            Transform fantasma = padre.transform.GetChild(0);
-            enemigoDead(fantasma.gameObject);
-            //pongo la posición del jugador en 0 en el eje x, para que no se vaya saliendo de la linea
-            var vector3 = transform.position;
-            vector3.x = 0;
-            transform.position = vector3;
-        }
-
-        if (collision.gameObject.CompareTag("banana"))
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("banana"))
         {
             PlaySound(3,0.5f);
             
             contadorBanana.GetComponent<ContadorBananas>().aumentarContador();
             
-            Destroy(collision.gameObject);
+            Destroy(other.gameObject);
         }
-
-        if (collision.gameObject.CompareTag("champinion"))
-        {
-            _rb.AddForce(Vector3.up * fuerzaSalto * 2.0f, ForceMode.Impulse);
-            PlaySound(4,1.0f);
-        }
-        
-        if (collision.gameObject.CompareTag("end"))
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
-        }
-
-        if (collision.gameObject.CompareTag("puente"))
-        {
-            if (!_isOnBridge) //Si es la primera vez que choca antes de salir del puente
-            {
-                diferencia = collision.transform.position.z - transform.position.z;
-            }
-            _isOnBridge = true;
-            _isGrounded = true;
-           
-            comprobarSupersalto();
-            _bridge = collision.gameObject;
-        }
-
-        if (collision.gameObject.CompareTag("bola"))
-        {
-            _rb.AddForce(new Vector3(1.0f,0.0f,0.0f)* 300.0f, ForceMode.Impulse);
-        }
-        
     }
 
     private void comprobarSupersalto()
@@ -216,8 +219,7 @@ public class PlayerController : MonoBehaviour
         {
             _isGrounded = false;
         }
-
-        if (collision.gameObject.CompareTag("puente"))
+        else if (collision.gameObject.CompareTag("puente"))
         {
             _isGrounded = false;
             _isOnBridge = false;

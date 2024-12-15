@@ -4,9 +4,8 @@ using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
-    private bool _sonado = false;
+    private bool _sonado;
     
-    public int aux = 0;
     public GameObject player;
     public float distanciaPlayer = 10.0f;
     public AudioClip[] Clips;
@@ -51,6 +50,12 @@ public class CameraController : MonoBehaviour
         SceneManager.LoadScene(currentSceneName);
         canva.SetActive(false);
         personajeMuerto = false;
+    }
+
+    public void exitGame()
+    {
+        Debug.Log("Saliendo del juego...");
+        Application.Quit();
     }
     
 }
