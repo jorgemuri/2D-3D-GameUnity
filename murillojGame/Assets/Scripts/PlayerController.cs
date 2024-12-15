@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour
             
             if (Input.GetKeyDown(KeyCode.LeftShift) && _isGrounded) //Si está en el suelo y corriendo
             {
+                /*
                 if (speed < 0)
                 {
                     speed = -velocidadCorriendo;
@@ -70,12 +71,14 @@ public class PlayerController : MonoBehaviour
                 {
                     speed = velocidadCorriendo;
                 }
-                
+                */
+                speed = velocidadCorriendo;
                 _animator.SetFloat("runningSpeed",2f);
                 _isRunning = true;
             }
             if (Input.GetKeyUp(KeyCode.LeftShift) && _isRunning) //Si he levantado el control después de correr
             {
+                /*
                 if (speed < 0)
                 {
                     speed = - velocidad;
@@ -84,6 +87,8 @@ public class PlayerController : MonoBehaviour
                 {
                     speed = velocidad;
                 }
+                */
+                speed = velocidad;
                 _animator.SetFloat("runningSpeed",1f);
                 _isRunning = false;
             }
@@ -103,20 +108,8 @@ public class PlayerController : MonoBehaviour
         {
             diferencia = _bridge.transform.position.z - transform.position.z;
         }
-        
-        // Mover al personaje en el eje X (izquierda o derecha)
-        
-            // Calcular la posición objetivo
-            Vector3 posicionObjetivo = transform.position + transform.forward * (_z * speed * Time.fixedDeltaTime);
-            // Mover suavemente hacia la posición objetivo usando Lerp o SmoothDamp
-            Vector3 velocidadSuavizada = Vector3.zero; // Variable para almacenar la velocidad de amortiguación
-            Vector3 nuevaPosicion = Vector3.SmoothDamp(_rb.position, posicionObjetivo, ref velocidadSuavizada, 0.2f);
 
-
-            // Mueve el personaje utilizando Rigidbody
-            _rb.MovePosition(nuevaPosicion);
-
-        //transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
+        transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
         
         // Salto
         if (Input.GetButtonDown("Jump"))
@@ -147,7 +140,7 @@ public class PlayerController : MonoBehaviour
 
     private void Flip()
     {
-        speed = speed * -1;
+        //speed = speed * -1;
         
         // Cambiar la dirección en que está mirando
         _facingRight = !_facingRight;

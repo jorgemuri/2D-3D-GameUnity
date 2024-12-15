@@ -2245,8 +2245,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   contadorBanana: {fileID: 0}
-  velocidad: 150
-  velocidadCorriendo: 200
+  velocidad: 5
+  velocidadCorriendo: 10
   fuerzaSalto: 5
   wings: {fileID: 694856750474019568}
   Clips:

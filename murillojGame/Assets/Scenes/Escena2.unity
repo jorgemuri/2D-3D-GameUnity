@@ -1835,7 +1835,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 3d812a44ad3a1e647b198364e9c9585e, type: 2}
     - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: velocidad
-      value: 15
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: contadorBanana
@@ -1847,7 +1847,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: velocidadCorriendo
-      value: 25
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: Clips.Array.data[0]
@@ -1924,6 +1924,10 @@ PrefabInstance:
     - target: {fileID: 8808046663915945812, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: m_Mass
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8808046663915945812, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
