@@ -106,11 +106,15 @@ public class PlayerController : MonoBehaviour
         
         // Mover al personaje en el eje X (izquierda o derecha)
         
-            // Calcula la dirección en la que te quieres mover
-            Vector3 moveDirection = transform.forward * (_z * speed * Time.deltaTime);
-    
+            // Calcular la posición objetivo
+            Vector3 posicionObjetivo = transform.position + transform.forward * (_z * speed * Time.fixedDeltaTime);
+            // Mover suavemente hacia la posición objetivo usando Lerp o SmoothDamp
+            Vector3 velocidadSuavizada = Vector3.zero; // Variable para almacenar la velocidad de amortiguación
+            Vector3 nuevaPosicion = Vector3.SmoothDamp(_rb.position, posicionObjetivo, ref velocidadSuavizada, 0.2f);
+
+
             // Mueve el personaje utilizando Rigidbody
-            _rb.MovePosition(_rb.position + moveDirection);
+            _rb.MovePosition(nuevaPosicion);
 
         //transform.Translate(transform.forward * (_z * speed * Time.deltaTime));
         

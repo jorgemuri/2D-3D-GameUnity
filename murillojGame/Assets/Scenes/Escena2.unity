@@ -1834,12 +1834,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 3d812a44ad3a1e647b198364e9c9585e, type: 2}
     - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
+      propertyPath: velocidad
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: contadorBanana
       value: 
       objectReference: {fileID: 579878902}
     - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: Clips.Array.size
       value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
+      propertyPath: velocidadCorriendo
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6292279982786347631, guid: 00da5f41d9b712e4287f6bb5058f8e86, type: 3}
       propertyPath: Clips.Array.data[0]
